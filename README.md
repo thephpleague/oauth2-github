@@ -1,7 +1,10 @@
 # Github Provider for OAuth 2.0 Client
-
-[![Build Status](https://travis-ci.org/thephpleague/oauth2-github.svg?branch=master)](https://travis-ci.org/thephpleague/oauth2-github)
-[![Latest Stable Version](https://poser.pugx.org/league/oauth2-github/v/stable.svg)](https://packagist.org/packages/league/oauth2-github)
+[![Latest Version](https://img.shields.io/github/release/thephpleague/oauth2-github.svg?style=flat-square)](https://github.com/thephpleague/oauth2-github/releases)
+[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
+[![Build Status](https://img.shields.io/travis/thephpleague/oauth2-github/master.svg?style=flat-square)](https://travis-ci.org/thephpleague/oauth2-github)
+[![Coverage Status](https://img.shields.io/scrutinizer/coverage/g/thephpleague/oauth2-github.svg?style=flat-square)](https://scrutinizer-ci.com/g/thephpleague/oauth2-github/code-structure)
+[![Quality Score](https://img.shields.io/scrutinizer/g/thephpleague/oauth2-github.svg?style=flat-square)](https://scrutinizer-ci.com/g/thephpleague/oauth2-github)
+[![Total Downloads](https://img.shields.io/packagist/dt/league/oauth2-github.svg?style=flat-square)](https://packagist.org/packages/league/oauth2-github)
 
 This package provides Github OAuth 2.0 support for the PHP League's [OAuth 2.0 Client](https://github.com/thephpleague/oauth2-client).
 
