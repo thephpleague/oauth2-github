@@ -33,7 +33,7 @@ if (!isset($_GET['code'])) {
 
     // If we don't have an authorization code then get one
     $authUrl = $provider->getAuthorizationUrl();
-    $_SESSION['oauth2state'] = $provider->state;
+    $_SESSION['oauth2state'] = $provider->getState();
     header('Location: '.$authUrl);
     exit;
 
@@ -54,10 +54,10 @@ if (!isset($_GET['code'])) {
     try {
 
         // We got an access token, let's now get the user's details
-        $userDetails = $provider->getUserDetails($token);
+        $user = $provider->getUser($token);
 
         // Use these details to create a new profile
-        printf('Hello %s!', $userDetails->firstName);
+        printf('Hello %s!', $user->getNickname());
 
     } catch (Exception $e) {
 
@@ -66,9 +66,46 @@ if (!isset($_GET['code'])) {
     }
 
     // Use this to interact with an API on the users behalf
-    echo $token->accessToken;
+    echo $token->getToken();
 }
 ```
+
+### Managing Scopes
+
+When creating your Github authorization URL, you can specify the state and scopes your application may authorize.
+
+```php
+$options = [
+    'state' => 'OPTIONAL_CUSTOM_CONFIGURED_STATE',
+    'scope' => ['user','user:email','repo'] // array or string
+];
+
+$authorizationUrl = $provider->getAuthorizationUrl($options);
+```
+If neither are defined, the provider will utilize internal defaults.
+
+At the time of authoring this documentation, the [following scopes are available](https://developer.github.com/v3/oauth/#scopes).
+
+- user
+- user:email
+- user:follow
+- public_repo
+- repo
+- repo_deployment
+- repo:status
+- delete_repo
+- notifications
+- gist
+- read:repo_hook
+- write:repo_hook
+- admin:repo_hook
+- admin:org_hook
+- read:org
+- write:org
+- admin:org
+- read:public_key
+- write:public_key
+- admin:public_key
 
 ## Testing
 
