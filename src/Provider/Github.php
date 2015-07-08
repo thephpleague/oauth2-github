@@ -109,17 +109,8 @@ class Github extends AbstractProvider
      */
     protected function createUser(array $response, AccessToken $token)
     {
-        $name = (isset($response['name'])) ? $response['name'] : null;
-        $email = (isset($response['email'])) ? $response['email'] : null;
+        $user = new User($response, $response['id']);
 
-        $attributes = [
-            'userId' => $response['id'],
-            'nickname' => $response['login'],
-            'name' => $name,
-            'email' => $email,
-            'url'  => $this->domain.'/'.$response['login'],
-        ];
-
-        return new User($attributes);
+        return $user->setDomain($this->domain);
     }
 }
