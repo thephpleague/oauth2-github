@@ -2,9 +2,9 @@
 
 /**
  * @property array $response
- * @property string $uid
+ * @property string $resourceOwnerId
  */
-class User extends StandardUser
+class GithubResourceOwner extends GenericResourceOwner
 {
     /**
      * Domain
@@ -14,7 +14,7 @@ class User extends StandardUser
     protected $domain;
 
     /**
-     * Get user email
+     * Get resource owner email
      *
      * @return string
      */
@@ -24,7 +24,7 @@ class User extends StandardUser
     }
 
     /**
-     * Get user name
+     * Get resource owner name
      *
      * @return string
      */
@@ -34,7 +34,7 @@ class User extends StandardUser
     }
 
     /**
-     * Get user nickname
+     * Get resource owner nickname
      *
      * @return string
      */
@@ -44,17 +44,17 @@ class User extends StandardUser
     }
 
     /**
-     * Get user userId
+     * Get resource owner id
      *
      * @return string
      */
-    public function getUserId()
+    public function getId()
     {
-        return $this->uid;
+        return $this->resourceOwnerId;
     }
 
     /**
-     * Get user url
+     * Get resource owner url
      *
      * @return string
      */
@@ -64,11 +64,11 @@ class User extends StandardUser
     }
 
     /**
-     * Set user domain
+     * Set resource owner domain
      *
      * @param  string $domain
      *
-     * @return User
+     * @return ResourceOwner
      */
     public function setDomain($domain)
     {

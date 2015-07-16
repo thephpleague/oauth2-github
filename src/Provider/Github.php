@@ -66,7 +66,7 @@ class Github extends AbstractProvider
      *
      * @return string
      */
-    public function getUserDetailsUrl(AccessToken $token)
+    public function getResourceOwnerDetailsUrl(AccessToken $token)
     {
         if ($this->domain === 'https://github.com') {
             return $this->apiDomain.'/user';
@@ -105,11 +105,11 @@ class Github extends AbstractProvider
      *
      * @param array $response
      * @param AccessToken $token
-     * @return League\OAuth2\Client\Provider\UserInterface
+     * @return League\OAuth2\Client\Provider\ResourceOwnerInterface
      */
-    protected function createUser(array $response, AccessToken $token)
+    protected function createResourceOwner(array $response, AccessToken $token)
     {
-        $user = new User($response, $response['id']);
+        $user = new GithubResourceOwner($response, $response['id']);
 
         return $user->setDomain($this->domain);
     }

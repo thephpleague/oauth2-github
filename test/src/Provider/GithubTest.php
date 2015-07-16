@@ -67,7 +67,7 @@ class GithubTest extends \PHPUnit_Framework_TestCase
     public function testGetAccessToken()
     {
         $response = m::mock('Psr\Http\Message\ResponseInterface');
-        $response->shouldReceive('getBody')->andReturn('{"access_token": "mock_access_token", "expires": 3600, "refresh_token": "mock_refresh_token", "uid": 1}');
+        $response->shouldReceive('getBody')->andReturn('{"access_token":"mock_access_token", "scope":"repo,gist", "token_type":"bearer"}');
         $response->shouldReceive('getHeader')->andReturn(['content-type' => 'json']);
 
         $client = m::mock('GuzzleHttp\ClientInterface');
@@ -77,10 +77,9 @@ class GithubTest extends \PHPUnit_Framework_TestCase
         $token = $this->provider->getAccessToken('authorization_code', ['code' => 'mock_authorization_code']);
 
         $this->assertEquals('mock_access_token', $token->getToken());
-        $this->assertLessThanOrEqual(time() + 3600, $token->getExpires());
-        $this->assertGreaterThanOrEqual(time(), $token->getExpires());
-        $this->assertEquals('mock_refresh_token', $token->getRefreshToken());
-        $this->assertEquals('1', $token->getUid());
+        $this->assertNull($token->getExpires());
+        $this->assertNull($token->getRefreshToken());
+        $this->assertNull($token->getResourceOwnerId());
     }
 
     public function testGithubEnterpriseDomainUrls()
@@ -100,7 +99,7 @@ class GithubTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($this->provider->domain.'/login/oauth/authorize', $this->provider->getBaseAuthorizationUrl());
         $this->assertEquals($this->provider->domain.'/login/oauth/access_token', $this->provider->getBaseAccessTokenUrl([]));
-        $this->assertEquals($this->provider->domain.'/api/v3/user', $this->provider->getUserDetailsUrl($token));
+        $this->assertEquals($this->provider->domain.'/api/v3/user', $this->provider->getResourceOwnerDetailsUrl($token));
         //$this->assertEquals($this->provider->domain.'/api/v3/user/emails', $this->provider->urlUserEmails($token));
     }
 
@@ -126,9 +125,9 @@ class GithubTest extends \PHPUnit_Framework_TestCase
         $this->provider->setHttpClient($client);
 
         $token = $this->provider->getAccessToken('authorization_code', ['code' => 'mock_authorization_code']);
-        $user = $this->provider->getUser($token);
+        $user = $this->provider->getResourceOwner($token);
 
-        $this->assertEquals($userId, $user->getUserId());
+        $this->assertEquals($userId, $user->getId());
         $this->assertEquals($name, $user->getName());
         $this->assertEquals($nickname, $user->getNickname());
         $this->assertEquals($email, $user->getEmail());
