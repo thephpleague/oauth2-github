@@ -128,9 +128,13 @@ class GithubTest extends \PHPUnit_Framework_TestCase
         $user = $this->provider->getResourceOwner($token);
 
         $this->assertEquals($userId, $user->getId());
+        $this->assertEquals($userId, $user->toArray()['id']);
         $this->assertEquals($name, $user->getName());
+        $this->assertEquals($name, $user->toArray()['name']);
         $this->assertEquals($nickname, $user->getNickname());
+        $this->assertEquals($nickname, $user->toArray()['login']);
         $this->assertEquals($email, $user->getEmail());
+        $this->assertEquals($email, $user->toArray()['email']);
         $this->assertContains($nickname, $user->getUrl());
     }
 

@@ -1,10 +1,6 @@
 <?php namespace League\OAuth2\Client\Provider;
 
-/**
- * @property array $response
- * @property string $resourceOwnerId
- */
-class GithubResourceOwner extends GenericResourceOwner
+class GithubResourceOwner implements ResourceOwnerInterface
 {
     /**
      * Domain
@@ -14,9 +10,36 @@ class GithubResourceOwner extends GenericResourceOwner
     protected $domain;
 
     /**
+     * Raw response
+     *
+     * @var array
+     */
+    protected $response;
+
+    /**
+     * Creates new resource owner.
+     *
+     * @param array  $response
+     */
+    public function __construct(array $response = array())
+    {
+        $this->response = $response;
+    }
+
+    /**
+     * Get resource owner id
+     *
+     * @return string|null
+     */
+    public function getId()
+    {
+        return $this->response['id'] ?: null;
+    }
+
+    /**
      * Get resource owner email
      *
-     * @return string
+     * @return string|null
      */
     public function getEmail()
     {
@@ -26,7 +49,7 @@ class GithubResourceOwner extends GenericResourceOwner
     /**
      * Get resource owner name
      *
-     * @return string
+     * @return string|null
      */
     public function getName()
     {
@@ -36,7 +59,7 @@ class GithubResourceOwner extends GenericResourceOwner
     /**
      * Get resource owner nickname
      *
-     * @return string
+     * @return string|null
      */
     public function getNickname()
     {
@@ -44,19 +67,9 @@ class GithubResourceOwner extends GenericResourceOwner
     }
 
     /**
-     * Get resource owner id
-     *
-     * @return string
-     */
-    public function getId()
-    {
-        return $this->resourceOwnerId;
-    }
-
-    /**
      * Get resource owner url
      *
-     * @return string
+     * @return string|null
      */
     public function getUrl()
     {
@@ -75,5 +88,15 @@ class GithubResourceOwner extends GenericResourceOwner
         $this->domain = $domain;
 
         return $this;
+    }
+
+    /**
+     * Return all of the owner details available as an array.
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        return $this->response;
     }
 }
