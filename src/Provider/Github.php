@@ -87,11 +87,13 @@ class Github extends AbstractProvider
     protected function checkResponse(ResponseInterface $response, $data)
     {
         if ($response->getStatusCode() >= 400) {
-            throw new IdentityProviderException(
-                $data['message'] ?: $response->getReasonPhrase(),
-                $response->getStatusCode(),
-                $response
-            );
+            $errorMessage = isset($data['message']) ? $data['message'] : $response->getReasonPhrase();
+        } elseif (isset($data['error'], $data['error_description'])) {
+            $errorMessage = $data['error'] . ': ' . $data['error_description'];
+        }
+
+        if (isset($errorMessage)) {
+            throw new IdentityProviderException($errorMessage, $response->getStatusCode(), $response);
         }
     }
 
