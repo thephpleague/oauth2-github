@@ -88,11 +88,9 @@ class Github extends AbstractProvider
     {
         if ($response->getStatusCode() >= 400) {
             $errorMessage = isset($data['message']) ? $data['message'] : $response->getReasonPhrase();
+            throw new IdentityProviderException($errorMessage, $response->getStatusCode(), $response);
         } elseif (isset($data['error'], $data['error_description'])) {
             $errorMessage = $data['error'] . ': ' . $data['error_description'];
-        }
-
-        if (isset($errorMessage)) {
             throw new IdentityProviderException($errorMessage, $response->getStatusCode(), $response);
         }
     }
