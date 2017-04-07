@@ -92,6 +92,18 @@ class Github extends AbstractProvider
         } elseif (isset($data['error'])) {
             throw GithubIdentityProviderException::oauthException($response, $data);
         }
+
+        // Github returns a 200 HTTP code status for some OAuth errors. So we must inspect the data to find out if there
+        // is any errors. The company is aware of this issue and may fix it in the future, so this code below should be
+        // temporary.
+        // See: https://github.com/thephpleague/oauth2-github/issues/4
+        else if (isset($data['error'])) {
+            throw new IdentityProviderException(
+                $data['error_description'],
+                $response->getStatusCode(),
+                $response
+            );
+        }
     }
 
     /**
