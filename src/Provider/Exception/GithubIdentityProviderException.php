@@ -10,7 +10,7 @@ class GithubIdentityProviderException extends IdentityProviderException
      * Creates client exception from response.
      *
      * @param  ResponseInterface $response
-     * @param  string $data Parsed response data
+     * @param  array $data Parsed response data
      *
      * @return IdentityProviderException
      */
@@ -26,7 +26,7 @@ class GithubIdentityProviderException extends IdentityProviderException
      * Creates oauth exception from response.
      *
      * @param  ResponseInterface $response
-     * @param  string $data Parsed response data
+     * @param  array $data Parsed response data
      *
      * @return IdentityProviderException
      */

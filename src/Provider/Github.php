@@ -82,7 +82,7 @@ class Github extends AbstractProvider
      * @link   https://developer.github.com/v3/oauth/#common-errors-for-the-access-token-request
      * @throws IdentityProviderException
      * @param  ResponseInterface $response
-     * @param  string $data Parsed response data
+     * @param  array $data Parsed response data
      * @return void
      */
     protected function checkResponse(ResponseInterface $response, $data)
@@ -99,7 +99,7 @@ class Github extends AbstractProvider
      *
      * @param array $response
      * @param AccessToken $token
-     * @return League\OAuth2\Client\Provider\ResourceOwnerInterface
+     * @return \League\OAuth2\Client\Provider\ResourceOwnerInterface
      */
     protected function createResourceOwner(array $response, AccessToken $token)
     {
