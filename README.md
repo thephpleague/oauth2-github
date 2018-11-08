@@ -29,6 +29,9 @@ $provider = new League\OAuth2\Client\Provider\Github([
     'redirectUri'       => 'https://example.com/callback-url',
 ]);
 
+// Start a new session if needed
+if ( ! session_id() ) @ session_start();
+
 if (!isset($_GET['code'])) {
 
     // If we don't have an authorization code then get one
