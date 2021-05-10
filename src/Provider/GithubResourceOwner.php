@@ -25,7 +25,7 @@ class GithubResourceOwner implements ResourceOwnerInterface
     /**
      * Creates new resource owner.
      *
-     * @param array  $response
+     * @param array $response
      */
     public function __construct(array $response = array())
     {
@@ -87,7 +87,7 @@ class GithubResourceOwner implements ResourceOwnerInterface
     /**
      * Set resource owner domain
      *
-     * @param  string $domain
+     * @param string $domain
      *
      * @return ResourceOwner
      */
