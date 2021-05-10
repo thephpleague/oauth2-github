@@ -35,7 +35,7 @@ class GithubResourceOwner implements ResourceOwnerInterface
     /**
      * Get resource owner id
      *
-     * @return string|null
+     * @return int|null
      */
     public function getId()
     {
