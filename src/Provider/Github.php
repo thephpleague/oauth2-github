@@ -89,7 +89,9 @@ class Github extends AbstractProvider
      */
     protected function getDefaultScopes()
     {
-        return [];
+        return [
+            'user.email',
+        ];
     }
 
     /**
