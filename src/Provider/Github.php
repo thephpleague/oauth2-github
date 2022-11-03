@@ -73,13 +73,7 @@ class Github extends AbstractProvider
 
             $responseEmail = $this->getParsedResponse($request);
 
-            if (! is_array($responseEmail)) {
-                throw new \UnexpectedValueException(
-                    'Invalid response received from Authorization Server. Expected JSON.'
-                );
-            }
-
-            $response['email'] = $responseEmail[0]['email'];
+            $response['email'] = $responseEmail[0]['email'] ?? null;
         }
 
         return $response;
