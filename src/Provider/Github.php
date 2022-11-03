@@ -66,14 +66,14 @@ class Github extends AbstractProvider
     {
         $response = parent::fetchResourceOwnerDetails($token);
 
-        if (! ($response['email'] ?? null)) {
+        if (empty($response['email'])) {
             $url = $this->getResourceOwnerDetailsUrl($token) . '/emails';
 
             $request = $this->getAuthenticatedRequest(self::METHOD_GET, $url, $token);
 
             $responseEmail = $this->getParsedResponse($request);
 
-            $response['email'] = $responseEmail[0]['email'] ?? null;
+            $response['email'] = isset($responseEmail[0]['email']) ? $responseEmail[0]['email'] : null;
         }
 
         return $response;
