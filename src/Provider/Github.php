@@ -62,6 +62,29 @@ class Github extends AbstractProvider
         return $this->domain . '/api/v3/user';
     }
 
+    protected function fetchResourceOwnerDetails(AccessToken $token)
+    {
+        $response = parent::fetchResourceOwnerDetails($token);
+
+        if (($response['email'] ?? null) == null) {
+            $url = $this->getResourceOwnerDetailsUrl($token) . '/emails';
+
+            $request = $this->getAuthenticatedRequest(self::METHOD_GET, $url, $token);
+
+            $responseEmail = $this->getParsedResponse($request);
+
+            if (false === is_array($responseEmail)) {
+                throw new \UnexpectedValueException(
+                    'Invalid response received from Authorization Server. Expected JSON.'
+                );
+            }
+
+            $response['email'] = $responseEmail[0]['email'];
+        }
+
+        return $response;
+    }
+
     /**
      * Get the default scopes used by this provider.
      *
