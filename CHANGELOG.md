@@ -2,6 +2,13 @@
 
 All Notable changes to `oauth2-github` will be documented in this file
 
+## 3.1.0 - 2022-11-04
+
+### Added
+
+- Added work around to get user email with resource owner (#20)
+- Added scope `user.email` to default scopes (#20)
+
 ## 3.0.0 - 2021-05-10
 
 ### Fixed
