@@ -236,4 +236,66 @@ class GithubTest extends TestCase
 
         $this->provider->getAccessToken('authorization_code', ['code' => 'mock_authorization_code']);
     }
+
+    public function testUserDataWithMissingEmail(): void
+    {
+        $userId = rand(1000, 9999);
+        $name = uniqid();
+        $nickname = uniqid();
+        $email = uniqid();
+
+        $postResponse = m::mock('Psr\Http\Message\ResponseInterface');
+        $postResponse->shouldReceive('getBody')
+            ->andReturn(http_build_query([
+                'access_token' => 'mock_access_token',
+                'expires' => 3600,
+                'refresh_token' => 'mock_refresh_token',
+            ]));
+        $postResponse->shouldReceive('getHeader')
+            ->andReturn(['content-type' => 'application/x-www-form-urlencoded']);
+        $postResponse->shouldReceive('getStatusCode')
+            ->andReturn(200);
+
+        $userResponse = m::mock('Psr\Http\Message\ResponseInterface');
+        $userResponse->shouldReceive('getBody')
+            ->andReturn(json_encode([
+                "id" => $userId,
+                "login" => $nickname,
+                "name" => $name,
+                "email" => null
+            ]));
+        $userResponse->shouldReceive('getHeader')
+            ->andReturn(['content-type' => 'json']);
+        $userResponse->shouldReceive('getStatusCode')
+            ->andReturn(200);
+
+        $emailResponse = m::mock('Psr\Http\Message\ResponseInterface');
+        $emailResponse->shouldReceive('getBody')
+            ->andReturn(json_encode([
+                ['email' => $email],
+            ]));
+        $emailResponse->shouldReceive('getHeader')
+            ->andReturn(['content-type' => 'json']);
+        $emailResponse->shouldReceive('getStatusCode')
+            ->andReturn(200);
+
+        $client = m::mock('GuzzleHttp\ClientInterface');
+        $client->shouldReceive('send')
+            ->times(3)
+            ->andReturn($postResponse, $userResponse, $emailResponse);
+        $this->provider->setHttpClient($client);
+
+        $token = $this->provider->getAccessToken('authorization_code', ['code' => 'mock_authorization_code']);
+        $user = $this->provider->getResourceOwner($token);
+
+        $this->assertEquals($userId, $user->getId());
+        $this->assertEquals($userId, $user->toArray()['id']);
+        $this->assertEquals($name, $user->getName());
+        $this->assertEquals($name, $user->toArray()['name']);
+        $this->assertEquals($nickname, $user->getNickname());
+        $this->assertEquals($nickname, $user->toArray()['login']);
+        $this->assertEquals($email, $user->getEmail());
+        $this->assertEquals($email, $user->toArray()['email']);
+        $this->assertStringContainsString($nickname, $user->getUrl());
+    }
 }
