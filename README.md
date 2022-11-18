@@ -77,7 +77,7 @@ When creating your Github authorization URL, you can specify the state and scope
 ```php
 $options = [
     'state' => 'OPTIONAL_CUSTOM_CONFIGURED_STATE',
-    'scope' => ['user','user:email','repo'] // array or string
+    'scope' => ['user','user:email','repo'] // array or string; at least 'user:email' is required
 ];
 
 $authorizationUrl = $provider->getAuthorizationUrl($options);
