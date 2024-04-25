@@ -25,6 +25,8 @@ class Github extends AbstractProvider
      */
     public $apiDomain = 'https://api.github.com';
 
+    public bool $alwaysCheckEmails = true;
+
     /**
      * Get authorization url to begin OAuth flow
      *
@@ -66,7 +68,7 @@ class Github extends AbstractProvider
     {
         $response = parent::fetchResourceOwnerDetails($token);
 
-        if (empty($response['email'])) {
+        if ($this->alwaysCheckEmails && empty($response['email'])) {
             $url = $this->getResourceOwnerDetailsUrl($token) . '/emails';
 
             $request = $this->getAuthenticatedRequest(self::METHOD_GET, $url, $token);
