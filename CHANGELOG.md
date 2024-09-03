@@ -1,6 +1,12 @@
 # Changelog
 
-All Notable changes to `oauth2-github` will be documented in this file
+All Notable changes to `oauth2-github` will be documented in this file.
+
+## 3.1.1 - 2024-09-03
+
+### Fixed
+
+- Corrected scope to get user email (#26)
 
 ## 3.1.0 - 2022-11-04
 
