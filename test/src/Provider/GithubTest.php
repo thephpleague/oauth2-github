@@ -84,7 +84,9 @@ class GithubTest extends TestCase
     {
         $response = m::mock('Psr\Http\Message\ResponseInterface');
         $response->shouldReceive('getBody')
-                 ->andReturn('{"access_token":"mock_access_token", "scope":"repo,gist", "token_type":"bearer"}');
+                  ->andReturn($this->createStream(
+                      '{"access_token":"mock_access_token", "scope":"repo,gist", "token_type":"bearer"}'
+                  ));
         $response->shouldReceive('getHeader')
                  ->andReturn(['content-type' => 'json']);
         $response->shouldReceive('getStatusCode')
@@ -109,11 +111,11 @@ class GithubTest extends TestCase
         $response = m::mock('Psr\Http\Message\ResponseInterface');
         $response->shouldReceive('getBody')
                  ->times(1)
-                 ->andReturn(http_build_query([
+                 ->andReturn($this->createStream(http_build_query([
                      'access_token' => 'mock_access_token',
                      'expires' => 3600,
                      'refresh_token' => 'mock_refresh_token',
-                 ]));
+                 ])));
         $response->shouldReceive('getHeader')
                  ->andReturn(['content-type' => 'application/x-www-form-urlencoded']);
         $response->shouldReceive('getStatusCode')
@@ -143,11 +145,11 @@ class GithubTest extends TestCase
 
         $postResponse = m::mock('Psr\Http\Message\ResponseInterface');
         $postResponse->shouldReceive('getBody')
-                     ->andReturn(http_build_query([
+                     ->andReturn($this->createStream(http_build_query([
                          'access_token' => 'mock_access_token',
                          'expires' => 3600,
                          'refresh_token' => 'mock_refresh_token',
-                     ]));
+                     ])));
         $postResponse->shouldReceive('getHeader')
                      ->andReturn(['content-type' => 'application/x-www-form-urlencoded']);
         $postResponse->shouldReceive('getStatusCode')
@@ -155,12 +157,12 @@ class GithubTest extends TestCase
 
         $userResponse = m::mock('Psr\Http\Message\ResponseInterface');
         $userResponse->shouldReceive('getBody')
-                     ->andReturn(json_encode([
+                     ->andReturn($this->createStream(json_encode([
                          "id" => $userId,
                          "login" => $nickname,
                          "name" => $name,
                          "email" => $email
-                     ]));
+                     ])));
         $userResponse->shouldReceive('getHeader')
                      ->andReturn(['content-type' => 'json']);
         $userResponse->shouldReceive('getStatusCode')
@@ -191,12 +193,12 @@ class GithubTest extends TestCase
         $status = rand(400, 600);
         $postResponse = m::mock('Psr\Http\Message\ResponseInterface');
         $postResponse->shouldReceive('getBody')
-                     ->andReturn(json_encode([
+                     ->andReturn($this->createStream(json_encode([
                          'message' => 'Validation Failed',
                          'errors' => [
                              ['resource' => 'Issue', 'field' => 'title', 'code' => 'missing_field'],
                          ],
-                     ]));
+                     ])));
         $postResponse->shouldReceive('getHeader')
                      ->andReturn(['content-type' => 'json']);
         $postResponse->shouldReceive('getStatusCode')
@@ -218,11 +220,11 @@ class GithubTest extends TestCase
         $status = 200;
         $postResponse = m::mock('Psr\Http\Message\ResponseInterface');
         $postResponse->shouldReceive('getBody')
-                     ->andReturn(json_encode([
+                     ->andReturn($this->createStream(json_encode([
                          "error" => "bad_verification_code",
                          "error_description" => "The code passed is incorrect or expired.",
                          "error_uri" => "https =>//developer.github.com/v3/oauth/#bad-verification-code"
-                     ]));
+                     ])));
         $postResponse->shouldReceive('getHeader')->andReturn(['content-type' => 'json']);
         $postResponse->shouldReceive('getStatusCode')->andReturn($status);
 
@@ -246,11 +248,11 @@ class GithubTest extends TestCase
 
         $postResponse = m::mock('Psr\Http\Message\ResponseInterface');
         $postResponse->shouldReceive('getBody')
-            ->andReturn(http_build_query([
+            ->andReturn($this->createStream(http_build_query([
                 'access_token' => 'mock_access_token',
                 'expires' => 3600,
                 'refresh_token' => 'mock_refresh_token',
-            ]));
+            ])));
         $postResponse->shouldReceive('getHeader')
             ->andReturn(['content-type' => 'application/x-www-form-urlencoded']);
         $postResponse->shouldReceive('getStatusCode')
@@ -258,12 +260,12 @@ class GithubTest extends TestCase
 
         $userResponse = m::mock('Psr\Http\Message\ResponseInterface');
         $userResponse->shouldReceive('getBody')
-            ->andReturn(json_encode([
+            ->andReturn($this->createStream(json_encode([
                 "id" => $userId,
                 "login" => $nickname,
                 "name" => $name,
                 "email" => null
-            ]));
+            ])));
         $userResponse->shouldReceive('getHeader')
             ->andReturn(['content-type' => 'json']);
         $userResponse->shouldReceive('getStatusCode')
@@ -271,9 +273,9 @@ class GithubTest extends TestCase
 
         $emailResponse = m::mock('Psr\Http\Message\ResponseInterface');
         $emailResponse->shouldReceive('getBody')
-            ->andReturn(json_encode([
+            ->andReturn($this->createStream(json_encode([
                 ['email' => $email],
-            ]));
+            ])));
         $emailResponse->shouldReceive('getHeader')
             ->andReturn(['content-type' => 'json']);
         $emailResponse->shouldReceive('getStatusCode')
@@ -297,5 +299,14 @@ class GithubTest extends TestCase
         $this->assertEquals($email, $user->getEmail());
         $this->assertEquals($email, $user->toArray()['email']);
         $this->assertStringContainsString($nickname, $user->getUrl());
+    }
+
+    private function createStream(string $body): \Psr\Http\Message\StreamInterface
+    {
+        $stream = m::mock('Psr\Http\Message\StreamInterface');
+        $stream->shouldReceive('__toString')
+            ->andReturn($body);
+
+        return $stream;
     }
 }
